@@ -12,56 +12,13 @@ function MainQuiz() {
     explanation_type: "In-depth explorations",
     interaction_needed: "Yes",
   });
-
+  console.log(input);
   const [quizData, setQuizData] = useState({});
   const [showQuiz, setShowQuiz] = useState(false);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState({});
   const [showModal, setShowModal] = useState(false);
-  useEffect(() => {
-    getQuiz();
-  }, []);
-
-  // const quizData = {
-  //   questions: {
-  //     "1. What is the time allowed for the exam?": {
-  //       options: ["a)1 hour", "b) 2 hours", "c) 3 hours", "d) 4 hours"],
-  //       answer: "a)1 hour",
-  //     },
-  //     "2. How many questions are required to be answered in total?": {
-  //       options: ["a) 2", "b) 3", "c) 4", "d) 5"],
-  //       answer: "c) 4",
-  //     },
-  //     "3. Which department offers the CPE401 course?": {
-  //       options: [
-  //         "a) Department of Computer Science",
-  //         "b) Department of Engineering",
-  //         "c) Department of Mathematics",
-  //         "d) Department of Business",
-  //       ],
-  //       answer: "a) Department of Computer Science",
-  //     },
-  //     "4. What is the purpose of using a different booklet for each section?": {
-  //       options: [
-  //         "a) To save paper",
-  //         "b) To make the exam more organized",
-  //         "c) To prevent cheating",
-  //         "d) To make it easier for the students",
-  //       ],
-  //       answer: "b) To make the exam more organized",
-  //     },
-  //     "5. What is the relationship between MIPS and CPI?": {
-  //       options: [
-  //         "a) Directly proportional",
-  //         "b) Inversely proportional",
-  //         "c) No relationship",
-  //         "d) Cannot be determined from the given information",
-  //       ],
-  //       answer: "d) Cannot be determined from the given information",
-  //     },
-  //   },
-  // };
 
   const getQuiz = () => {
     var myHeaders = new Headers();
@@ -73,7 +30,7 @@ function MainQuiz() {
 
     var raw = JSON.stringify({
       language: "English",
-      course_code: "CSC401",
+      course_code: input.course_code,
       page_number: 0,
       topic: "jet engines",
       explanation_level: "Advanced insights",
@@ -101,12 +58,17 @@ function MainQuiz() {
       })
       .catch((error) => console.log("error", error));
   };
+
   const handleStartQuiz = () => {
     setShowQuiz(true);
   };
   // console.log(quizData);
   const questions = Object.keys(quizData?.questions || {});
   // console.log(questions);
+  const handleQuizFormInputChange = (e) => {
+    const { name, value } = e.target;
+    setInput({ ...input, [name]: value });
+  };
 
   const handleOptionSelect = (question, option) => {
     setSelectedOptions({ ...selectedOptions, [question]: option.trim() });
@@ -278,9 +240,11 @@ function MainQuiz() {
         </div>
       ) : (
         <QuizForm
+          getQuiz={getQuiz}
           input={input}
           setInput={setInput}
           handleStartQuiz={handleStartQuiz}
+          handleQuizFormInputChange={handleQuizFormInputChange}
         />
       )}
     </>
